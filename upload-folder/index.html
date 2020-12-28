@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>folder upload</title>
+  <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../styles/index.css">
+</head>
+
+<body>
+  <div class="max-w-xl m-auto">
+    <a class="fixed top-2 left-2" href="../index.html">
+      <svg class="w-10 h-10" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24"
+        stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+      </svg>
+    </a>
+    <h1>folder upload</h1>
+    <!--  -->
+    <input class="focus:outline-none border border-solid border-gray-300 px-4 py-1 rounded w-full"
+      placeholder="upload file" type="file" id="file-uploader" webkitdirectory />
+    <ul id="content-list"></ul>
+      <!--  -->
+    <br/>
+    <!-- CODE EXAMPLE -->
+    <div class="relative py-6 bg-gray-900 text-white overflow-y-auto rounded-lg">
+      <button id="copy" class="absolute top-3 right-3 focus:outline-none">
+        <svg class="w-6 h-6" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round"
+          stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
+          <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+          <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+        </svg>
+      </button>
+<xmp id="code">
+  `input type="file" webkitdirectory`
+
+  $ELE.FILE_UPLOADER.addEventListener('change', (event) => {
+    const files = event.target.files;
+    [...files].forEach((file, index) => {
+      let path = document.createElement('li');
+      path.innerHTML = file.webkitRelativePath;
+      $ELE.CONTENT_LIST.appendChild(path);
+    })
+  })
+</xmp>
+    </div>
+  </div>
+  <script>
+    const $ELE = {
+      FILE_UPLOADER: document.querySelector('#file-uploader'),
+      CONTENT_LIST: document.querySelector('#content-list'),
+    };
+
+    $ELE.FILE_UPLOADER.addEventListener('change', (event) => {
+      const files = event.target.files;
+      [...files].forEach((file, index) => {
+        let path = document.createElement('li');
+        path.innerHTML = file.webkitRelativePath;
+        $ELE.CONTENT_LIST.appendChild(path);
+      })
+    })
+
+    $ELE.COPY.addEventListener('click', event => {
+      const code = document.querySelector('#code').innerHTML;
+      const $temp = document.createElement('textarea');
+      document.body.appendChild($temp);
+      $temp.value = code;
+      $temp.select();
+      document.execCommand('copy');
+      document.body.removeChild($temp);
+    })
+  </script>
+</body>
+
+</html>

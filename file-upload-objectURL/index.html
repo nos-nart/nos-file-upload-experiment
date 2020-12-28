@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>objectURL</title>
+  <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../styles/index.css">
+</head>
+
+<body>
+  <div class="max-w-6xl m-auto">
+    <a class="fixed top-2 left-2" href="../index.html">
+      <svg class="w-10 h-10" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24"
+        stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+      </svg>
+    </a>
+    <h1>objectURL</h1>
+    <!--  -->
+    <div class="grid grid-cols-2 gap-12">
+      <div>
+        <input class="focus:outline-none border border-solid border-gray-300 px-4 py-1 rounded w-full"
+          placeholder="upload file" type="file" id="file-uploader" accept=".jpg, .jpeg, .png" />
+        <br>
+        <br>
+        <!-- CODE EXAMPLE -->
+        <div class="relative py-6 bg-gray-900 text-white overflow-y-auto rounded-lg">
+          <button id="copy" class="absolute top-3 right-3 focus:outline-none">
+            <svg class="w-6 h-6" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24"
+              stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
+              <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+              <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+            </svg>
+          </button>
+<xmp id="code">
+  $ELE.FILE_UPLOADER.addEventListener('change', (event) => {
+    const files = event.target.files;
+    const img = document.createElement('img');
+    if (files && files.length > 0) {
+      const targetFile = files[0];
+      try {
+        const objectURL = window.URL.createObjectURL(targetFile);
+        img.src = URL.createObjectURL(file);
+        img.alt = targetFile.name;
+      } catch (err) {
+        try {
+          const fileReader = new FileReader();
+          fileReader.onload = evt => {
+            img.src = evt.target.result;
+          }
+          fileReader.readAsDataURL(targetFile);
+        } catch (e) {
+          console.log(`File upload not supported ${e}`);
+        }
+      }
+    }
+    $ELE.PREVIEW.appendChild(img);
+  })
+</xmp>
+        </div>
+      </div>
+      <div class="w-full" id="preview"></div>
+    </div>
+    <!--  -->
+    <br />
+  </div>
+  <script>
+    const $ELE = {
+      FILE_UPLOADER: document.querySelector('#file-uploader'),
+      PREVIEW: document.querySelector('#preview'),
+      COPY: document.querySelector('#copy')
+    };
+
+    $ELE.FILE_UPLOADER.addEventListener('change', (event) => {
+      const files = event.target.files;
+      const img = document.createElement('img');
+      if (files && files.length > 0) {
+        const targetFile = files[0];
+        try {
+          const objectURL = window.URL.createObjectURL(targetFile);
+          img.src = objectURL;
+          img.alt = targetFile.name;
+        } catch (err) {
+          try {
+            const fileReader = new FileReader();
+            fileReader.onload = evt => {
+              img.src = evt.target.result;
+            }
+            fileReader.readAsDataURL(targetFile);
+          } catch (e) {
+            console.log(`File upload not supported ${e}`);
+          }
+        }
+      }
+      $ELE.PREVIEW.appendChild(img);
+    })
+
+    $ELE.COPY.addEventListener('click', event => {
+      const code = document.querySelector('#code').innerHTML;
+      const $temp = document.createElement('textarea');
+      document.body.appendChild($temp);
+      $temp.value = code;
+      $temp.select();
+      document.execCommand('copy');
+      document.body.removeChild($temp);
+    })
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>drag and drop</title>
+  <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../styles/index.css">
+</head>
+
+<body>
+  <div class="max-w-6xl m-auto">
+    <a class="fixed top-2 left-2" href="../index.html">
+      <svg class="w-10 h-10" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24"
+        stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+      </svg>
+    </a>
+    <h1>drag and drop</h1>
+    <!--  -->
+    <div class="grid grid-cols-2 gap-8">
+      <div>
+        <div id="drop-zone" class="border border-dashed border-gray-300 flex items-center justify-center h-40 w-full">
+          <div class="flex flex-col items-center">
+            <svg class="w-10 h-10" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24"
+              stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
+              <path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z"></path>
+              <path d="M13 13l6 6"></path>
+            </svg>
+            <span id="file-name">drop here</span>
+          </div>
+        </div>
+        <br>
+        <!-- CODE EXAMPLE -->
+        <div class="relative py-6 bg-gray-900 text-white overflow-y-auto rounded-lg">
+          <button id="copy" class="absolute top-3 right-3 focus:outline-none">
+            <svg class="w-6 h-6" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24"
+              stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
+              <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+              <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+            </svg>
+          </button>
+<xmp id="code">
+  function preventDefaults (e) {
+    e.preventDefault()
+    e.stopPropagation()
+  }
+
+  function highlight(e) {
+    $ELE.DROP_ZONE.classList.add('bg-blue-200')
+  }
+
+  function unhighlight(e) {
+    $ELE.DROP_ZONE.classList.remove('bg-blue-200')
+  }
+
+  ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+    $ELE.DROP_ZONE.addEventListener(eventName, preventDefaults, false);
+  })
+
+  $ELE.DROP_ZONE.addEventListener('dragenter', highlight, false)
+  $ELE.DROP_ZONE.addEventListener('dragover', highlight, false)
+  $ELE.DROP_ZONE.addEventListener('dragleave', unhighlight, false)
+  $ELE.DROP_ZONE.addEventListener('drop', unhighlight, false)
+  $ELE.DROP_ZONE.addEventListener('drop', onDrop, false);
+
+  function onDrop(evt) {
+    console.log('evt: ', evt);
+    let dt = evt.dataTransfer;
+    let files = dt.files;
+    let img = document.createElement('img');
+    const objectURL = window.URL.createObjectURL(files[0]);
+    img.src = objectURL;
+    $ELE.PREVIEW.appendChild(img);
+    // const reader = new FileReader();
+    // reader.readAsDataURL(files[0]);
+    // reader.onloadend = function() {
+    //   let img = document.createElement('img');
+    //   img.src = reader.result;
+    //   $ELE.FILE_NAME.innerHTML = files[0].name;
+    //   $ELE.PREVIEW.appendChild(img);
+    // }
+  }
+</xmp>
+        </div>
+      </div>
+      <div id="preview"></div>
+    </div>
+    <!--  -->
+    <br />
+  </div>
+  <script>
+    const $ELE = {
+      DROP_ZONE: document.querySelector('#drop-zone'),
+      PREVIEW: document.querySelector('#preview'),
+      COPY: document.querySelector('#copy'),
+      FILE_NAME: document.querySelector('#file-name')
+    };
+
+    function preventDefaults (e) {
+      e.preventDefault()
+      e.stopPropagation()
+    }
+
+    function highlight(e) {
+      $ELE.DROP_ZONE.classList.add('bg-blue-200')
+    }
+
+    function unhighlight(e) {
+      $ELE.DROP_ZONE.classList.remove('bg-blue-200')
+    }
+
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+      $ELE.DROP_ZONE.addEventListener(eventName, preventDefaults, false);
+    })
+
+    $ELE.DROP_ZONE.addEventListener('dragenter', highlight, false)
+    $ELE.DROP_ZONE.addEventListener('dragover', highlight, false)
+    $ELE.DROP_ZONE.addEventListener('dragleave', unhighlight, false)
+    $ELE.DROP_ZONE.addEventListener('drop', unhighlight, false)
+    $ELE.DROP_ZONE.addEventListener('drop', onDrop, false);
+
+    function onDrop(evt) {
+      console.log('evt: ', evt);
+      let dt = evt.dataTransfer;
+      let files = dt.files;
+      let img = document.createElement('img');
+      const objectURL = window.URL.createObjectURL(files[0]);
+      img.src = objectURL;
+      $ELE.PREVIEW.appendChild(img);
+      // const reader = new FileReader();
+      // reader.readAsDataURL(files[0]);
+      // reader.onloadend = function() {
+      //   let img = document.createElement('img');
+      //   img.src = reader.result;
+      //   $ELE.FILE_NAME.innerHTML = files[0].name;
+      //   $ELE.PREVIEW.appendChild(img);
+      // }
+    }
+
+    $ELE.COPY.addEventListener('click', event => {
+      const code = document.querySelector('#code').innerHTML;
+      const $temp = document.createElement('textarea');
+      document.body.appendChild($temp);
+      $temp.value = code;
+      $temp.select();
+      document.execCommand('copy');
+      document.body.removeChild($temp);
+    })
+  </script>
+</body>
+
+</html>

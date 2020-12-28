@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>file upload progress</title>
+  <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../styles/index.css">
+</head>
+
+<body>
+  <div class="max-w-xl m-auto">
+    <a class="fixed top-2 left-2" href="../index.html">
+      <svg class="w-10 h-10" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round"
+        stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+      </svg>
+    </a>
+    <h1>File upload progress</h1>
+    <input class="focus:outline-none border border-solid border-gray-300 px-4 py-1 rounded w-full"
+      placeholder="upload file" type="file" id="file-uploader">
+    <p class="my-2 text-sm" id="message"></p>
+    <label id="progress-label" for="progress"></label>
+    <progress class="my-2 w-full" id="progress" value="0" max="100"> </progress>
+  </div>
+  <script>
+    const $ELE = {
+      FILE_UPLOADER: document.querySelector('#file-uploader'),
+      MESSAGE: document.querySelector('#message'),
+      PROGRESS: document.querySelector('#progress'),
+      PROGRESS_LABEL: document.querySelector('#progress-label')
+    };
+
+    const reader = new FileReader();
+
+    $ELE.FILE_UPLOADER.addEventListener('change', (event) => {
+      const files = event.target.files;
+      const file = files[0];
+      reader.readAsDataURL(file);
+
+      reader.addEventListener('progress', (event) => {
+        console.log('event: ', event);
+        if (event.loaded && event.total) {
+          const percent = (event.loaded / event.total) * 100;
+          $ELE.PROGRESS.value = percent;
+          $ELE.PROGRESS_LABEL.innerHTML = Math.round(percent) + '%';
+
+          if (percent === 100) {
+            let message = `<span>File <b>${file.name}</b> has been uploaded successfully!!</span>`;
+            $ELE.MESSAGE.innerHTML = message;
+          }
+        }
+      })
+    })
+  </script>
+</body>
+
+</html>
