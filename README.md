@@ -1,3 +1,3 @@
 # File upload experiment
 
-![example]()
+![example](https://github.com/nos-nart/nos-file-upload-experiment/blob/master/Screenshot_6.png)
